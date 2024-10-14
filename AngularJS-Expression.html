@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <title>AngularJS Expression</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width;initial-scale=1"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    </head>
+    <div ng-app="" ng-init="myColor='lightblue';quantity=10;cost=15;firstName='John';lastName='Doe';person2={firstName:'John',lastName:'Miller'};
+    points=[1,15,19,2,40]">
+        <p>My first expression: {{ 5 + 5 }}</p>
+        <div style="background-color: {{myColor}};" ng-model="myColor">
+            Div with background color lightblue<br/>
+            Total in dollar: <span ng-bind="quantity * cost"></span>
+            <br/>
+            Full name is <span ng-bind="firstName + ' ' + lastName"></span>
+        </div>
+        <br/>
+        <input type="text" style="background-color: {{myColor}};" ng-model="myColor"/>
+        <br/>
+        <p>The name of person2 is <span ng-bind="person2.firstName + ' ' + person2.lastName"></span></p>
+        <br/>
+        The name of person2 is {{person2.firstName + ' ' + person2.lastName}}
+        <br/>
+        The third point is {{points[2]}}
+        <br/>
+        <p>The second point is <span ng-bind="points[1]"></span></p>
+    </div>
+</html>
