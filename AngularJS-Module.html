@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <title>2 Angular-JS Module</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width;initial-scale=1"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    </head>
+    <body>
+        <!-- 
+        An AngularJS module defines an application
+        The module is a container for different parts of an application
+        The module is container for the application controllers
+        -->
+        <!-- <div ng-app="myApp" ng-controller="myCtrl" > -->
+        <div ng-app="myApp" ng-controller="myCtrl">
+            Name: {{firstName + " " + lastName}}
+            <p ng-bind="firstName + ' ' + lastName"/>
+        </div>
+        <w3-test-directive>This is a directive</w3-test-directive>
+        <script>
+            var app = angular.module("myApp",[]);
+            app.controller("myCtrl",function($scope){
+                   $scope.firstName = "John";
+                   $scope.lastName="Doe"; 
+            });
+            app.directive("w3TestDirective",function(){
+                   return{
+                    template: "I was made in a directive contructor!"
+                   }; 
+            });
+        </script>
+        <script src="myApp.js"/>
+        <script src="myCtrl.js"/>
+    </body>
+</html>

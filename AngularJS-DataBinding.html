@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>5 Angular-JS DataBinding</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width;initial-scale=1"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    </head>
+    <body>
+        <!--
+        The HTML container where the AngularJS application is displayed, is called the view.
+        The view has access to the model, and there are several ways of displaying model data in the view.
+        -->
+        <div ng-app="myApp" ng-controller="myCtrl">
+            Name: <input ng-model="name"/>
+            <h1 ng-click="changeName()">{{name}}</h1>
+        </div>
+        <script>
+            app = angular.module('myApp',[]);
+            app.controller('myCtrl',function($scope){
+                $scope.name = 'John Doe';                
+                $scope.changeName = function(){
+                    $scope.name = "Nelly";
+                }
+            });
+        </script>
+    </body>
+</html>

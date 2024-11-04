@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <title>6 Angular-JS Controller</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width;initial-scale=1"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    </head>
+    <body  ng-app="myApp">
+        <!--AngularJS controllers control the data of AngularJS applications.
+        AngularJS controllers are regular JavaScript Objects.-->
+        <div ng-controller="personCtrl">
+            First Name: <input type="text" ng-model="firstName" />
+            Last Name: <input type="text" ng-model="lastName" />     
+            <br/>           
+            Full Name: {{fullName()}}
+        </div>
+        <div ng-controller="namesCtrl">
+            <ul>
+                <li ng-repeat="x in names">
+                    {{x.name + ", " + x.country}}
+                </li>
+            </ul>
+        </div>
+        <script>
+            app = angular.module('myApp',[]);
+        </script>
+        <script src="personController.js"></script>
+        <script src="namesController.js"></script>
+    </body>    
+</html>

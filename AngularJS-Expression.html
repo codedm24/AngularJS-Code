@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
     <head>
-        <title>AngularJS Expression</title>
+        <title>1 AngularJS Expression</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width;initial-scale=1"/>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     </head>
+    <body>
     <div ng-app="" ng-init="myColor='lightblue';quantity=10;cost=15;firstName='John';lastName='Doe';person2={firstName:'John',lastName:'Miller'};
     points=[1,15,19,2,40]">
         <p>My first expression: {{ 5 + 5 }}</p>
@@ -26,4 +27,5 @@
         <br/>
         <p>The second point is <span ng-bind="points[1]"></span></p>
     </div>
+</body>
 </html>

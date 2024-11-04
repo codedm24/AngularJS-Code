@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <title>8 Angular-JS Filters</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width;initial-scale=1"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>        
+    </head>
+    <body  ng-app="myApp">
+        <!--
+        currency  = Format a number to a currency format.
+        date      = Format a date to a specified format.
+        filter    = Select a subset of items from an array.
+        json      = Format an object to a JSON string.
+        limitTo   = Limits an array/string, into a specified number of elements/characters.
+        lowercase = Format a string to lower case.
+        number    = Format a number to a string.
+        orderBy   = Orders an array by an expression.
+        uppercase = Format a string to upper case.
+        -->
+        <div ng-controller="personCtrl">
+            <p>The name is {{ firstName | uppercase}}</p>
+            <p>The name is {{ lastName | lowercase}}</p>
+        </div>
+        <div ng-controller="namesCtrl">
+            <ul>
+                <li ng-repeat="x in names | orderBy:'country'">
+                    {{x.name + ', ' + x.country }}                        
+                </li>
+            </ul>
+            <br/>
+            Filtered Array
+            <ul>
+                <li ng-repeat="x in names | filter: 'i'">
+                    {{x.name + ', ' + x.country }}                        
+                </li>
+            </ul>
+            <br/>
+            Input Filter
+            <br/>
+            <p><input type="text" ng-model='nameFilter'/></p>
+            <ul>
+                <li ng-repeat="x in names1 | filter: nameFilter">
+                    {{x}}
+                </li>
+            </ul>
+            <br/>
+            <table border="10px" width="100%">
+                <tr>
+                    <th ng-click="orderByMe('name')">Name</th>
+                    <th ng-click="orderByMe('country')">Country</th>
+                </tr>
+                <tr ng-repeat="x in names | orderBy: myOrderBy">
+                    <td>{{x.name}}</td>
+                    <td>{{x.country}}</td>
+                </tr>
+            </table>            
+            <br/>
+            Custom Filter
+            <ul>
+                <li ng-repeat="x in names1">
+                    {{x  | myFormat}}                        
+                </li>
+            </ul>
+        </div>
+        <div ng-controller="unitpriceCtrl">
+            <h1>Price: {{ price | currency}}</h1>
+        </div>
+        <script>
+            app = angular.module('myApp',[]);
+            app.filter('myFormat', function() {
+                return function(x) {
+                    var i, c, txt = "";
+                    for (i = 0; i < x.length; i++) {
+                    c = x[i];
+                    if (i % 2 == 0) {
+                        c = c.toUpperCase();
+                    }
+                    txt += c;
+                    }
+                    return txt;
+                };
+            });
+        </script>
+        <script src="personController.js"></script>
+        <script src="namesController.js"></script>
+        <script src="unitpriceController.js"></script>
+    </body>
+</html>
