@@ -160,7 +160,8 @@
                     $scope.selectedItem = angular.copy(item);
                     $scope.isEditing = true;
                 };
-                $scope.updateItem = function(){
+                $scope.updateItem = function(){                     
+                    console.log("Here1");
                     for(var i in $scope.bookchapters){
                         if($scope.bookchapters[i].id == $scope.selectedItem.id)
                         {
@@ -168,8 +169,31 @@
                         }
                     }
                     $scope.isEditing = false;                                            
-                    $scope.selectedItem = {};                      
-                }
+                    $scope.selectedItem = {};      
+                    //UpdateItemAtServer();         
+                    $http({
+                        method: "PUT",
+                        url: "http://localhost:8077/api/BookChaptersAsync/" + $scope.selectedItem.id,
+                        data: $scope.selectedItem
+                    }).then(function(response){
+                        $scope.bookchapterError = JSON.stringify("Data updated successfully",response);
+                    },function(error){
+                        $scope.bookchapterError = JSON.stringify(error);
+                    });
+                    console.log("Here2");                   
+                };
+                $scope.UpdateItemAtServer = function(){
+                    console.log("Here3"+ JSON.stringify($scope.selectedItem));
+                    $http({
+                        method: "PUT",
+                        url: "http://localhost:8077/api/BookChaptersAsync/" + $scope.selectedItem.id,
+                        data: $scope.selectedItem
+                    }).then(function(response){
+                        $scope.bookchapterError = JSON.stringify("Data updated successfully",response);
+                    },function(error){
+                        $scope.bookchapterError = JSON.stringify(error);
+                    });
+                };
                 $scope.cancelEdit = function(){
                     $scope.isEditing = false;  
                     $scope.selectedItem = {};                      
