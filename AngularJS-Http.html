@@ -36,8 +36,8 @@
             <div class="container">
                 <input type="button" class="btn btn-info" id="btnGetData1" value="Get BookChapters" ng-click="GetBookChapterData()"/>
                 &nbsp;
-                <input type="button" class="btn btn-info" id="btnGetData1" value="Add Item" ng-if="isData" ng-click="GetBookChapterData()"/>                
-                <p>{{bookchapterError}}</p>
+                <input type="button" class="btn btn-info" id="btnAddData" value="Add Item" ng-if="isData" ng-click="showAddItem()"/>                
+                <p class="text-center text-info bg-light">{{bookchapterError}}</p>
 
                 <table class="table table-bordered">
                     <thead class="thead-dark">
@@ -52,16 +52,16 @@
                         <td class="text-center">{{item.title}}</td>
                         <td class="text-center">{{item.pages}}</td>
                         <td class="text-center small-width">
-                            <input type="button" class="btn btn-primary" value="Edit" id="btnEdit" ng-click="editItem(item)"/>
+                            <input type="button" class="btn btn-primary" value="Edit" id="btnEdit" ng-click="showEditItem(item)"/>
                             &nbsp;
-                            <input type="button" class="btn btn-secondary" value="Delete" id="button-secondary" ng-click="deleteItem(item)"/>
+                            <input type="button" class="btn btn-secondary" value="Delete" id="btnDelete" ng-click="deleteItem(item)"/>
                         </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="container" ng-if="isEditing">
-                <form ng-submit="updateItem()">
+                <form id="form1" ng-submit="updateItem()">
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <th class="text-left" colspan="2">Edit Item</th>
@@ -95,12 +95,71 @@
                                 <td class="text-center" colspan="2">
                                     <input type="submit" class="btn btn-primary" value="Update" id="btnEdit"/>
                                     &nbsp;
-                                    <input type="button" class="btn btn-secondary" value="Cancel" id="button-secondary" ng-click="cancelEdit()"/>
+                                    <input type="button" class="btn btn-secondary" value="Cancel" id="btnCancelEdit" ng-click="cancelEdit()"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </form>
+            </div>
+            <div class="container" ng-if="isAddition">
+                <form id="form2" ng-submit="addItem()">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <th class="text-left" colspan="2">Add Item</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">
+                                    <label class="font-weight-bold">Number:</label>
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" ng-model="newItem.number" required/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <label class="font-weight-bold">Title:</label>                
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" ng-model="newItem.title" required/>                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <label class="font-weight-bold">Pages:</label>                
+                                </td>
+                                <td class="text-center">
+                                    <input type="text" ng-model="newItem.pages" required/>                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="2">
+                                    <input type="submit" class="btn btn-primary" value="Add" id="btnAdd"/>
+                                    &nbsp;
+                                    <input type="button" class="btn btn-secondary" value="Cancel" id="btnCancelAdd" ng-click="cancelAdd()"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal" tabindex="-1" role="dialog" ng-show="isModalVisible" style="display: block;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning">
+                            <h5 class="modal-title text-light">Confirmation</h5>
+                            <button type="button" class="close" ng-click="closeModal()">&times;</button>
+                        </div>
+                        <div class="modal-body bg-light">
+                            <p>{{ modalMessage }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" ng-click="confirmAction()">OK</button>
+                            <button type="button" class="btn btn-secondary" ng-click="closeModal()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <script>
@@ -108,36 +167,66 @@
             app.controller("myCtrl",function($scope, $http, $sce){
                 $scope.items = [];
                 $scope.isEditing = false;
+                $scope.isAddition = false;
+                $scope.isModalVisible = false;
+                $scope.modalMessage = "";
+                $scope.confirmCallback = null;
+
+                $scope.showModal = function(message,callback){
+                    $scope.modalMessage = message;
+                    $scope.confirmCallback = callback;
+                    $scope.isModalVisible = true;
+                    console.log("Showing modal");
+                };
+
+                $scope.closeModal = function(){
+                    $scope.isModalVisible = false;
+                    $scope.modalMessage = "";
+                    $scope.confirmCallback = null;
+                };
+
+                $scope.confirmAction = function(){
+                    if($scope.confirmCallback)
+                    {
+                        $scope.confirmCallback();
+                    }
+                    $scope.closeModal();
+                };
+
                 $http.get("http://localhost:8077/api/ServiceTest/WelcomeMessage")
                 .then(function(response){
                     $scope.myWelcome = response.data;
                     $scope.statuscode = response.status;
                     $scope.statusText = response.statusText;
                 });                
+
                 $scope.GetDataToShowError = function(){
                     $http({
                         method:"GET",
                         url:"http://localhost:8077/api/ServiceTest/WelcomeMessage1"    
-                    }).then(function mySuccess(response){
+                    }).then(function(response){
                         $scope.errorMessage = "No Error";
-                    },function myError(error){
+                    },function(error){
                         $scope.errorMessage = JSON.stringify(error);
                     });
                 };    
+
                 $scope.GetBookChapterData = function(){
                     $http({
                         method:"GET",
                         url: "http://localhost:8077/api/BookChaptersAsync"
-                    }).then(function serviceSuccess(response){
+                    }).then(function(response){
                         //jsonobject = JSON.parse(response.data);
                         //alert(jsonobject);
                         //$scope.bookchapters = jsonobject;
                         $scope.bookchapters = response.data;
+                        $scope.isData = true;
                         //alert($scope.bookchapters);
-                    },function serviceError(error){
+                    },function(error){
                          $scope.bookchapterError = JSON.stringify(error);   
                     });
                 };
+
                 $scope.formatrecord = function(x){
                     // var text = JSON.stringify(x);
                     // var prettyHtml = jsonPrettyHtml;
@@ -156,48 +245,99 @@
                     returnval = $sce.trustAsHtml(returnval);                    
                     return returnval;
                 };
-                $scope.editItem = function(item){
+
+                $scope.showEditItem = function(item){
                     $scope.selectedItem = angular.copy(item);
                     $scope.isEditing = true;
                 };
+
                 $scope.updateItem = function(){                     
-                    console.log("Here1");
                     for(var i in $scope.bookchapters){
                         if($scope.bookchapters[i].id == $scope.selectedItem.id)
                         {
                             $scope.bookchapters[i] = $scope.selectedItem;
                         }
                     }
-                    $scope.isEditing = false;                                            
-                    $scope.selectedItem = {};      
-                    //UpdateItemAtServer();         
-                    $http({
-                        method: "PUT",
-                        url: "http://localhost:8077/api/BookChaptersAsync/" + $scope.selectedItem.id,
-                        data: $scope.selectedItem
-                    }).then(function(response){
-                        $scope.bookchapterError = JSON.stringify("Data updated successfully",response);
-                    },function(error){
-                        $scope.bookchapterError = JSON.stringify(error);
-                    });
-                    console.log("Here2");                   
+                    $scope.isEditing = false;     
+                    $scope.UpdateItemAtServer();                                           
+                    $scope.selectedItem = {};           
                 };
+
                 $scope.UpdateItemAtServer = function(){
-                    console.log("Here3"+ JSON.stringify($scope.selectedItem));
-                    $http({
-                        method: "PUT",
-                        url: "http://localhost:8077/api/BookChaptersAsync/" + $scope.selectedItem.id,
-                        data: $scope.selectedItem
-                    }).then(function(response){
-                        $scope.bookchapterError = JSON.stringify("Data updated successfully",response);
-                    },function(error){
-                        $scope.bookchapterError = JSON.stringify(error);
+
+                    $scope.showModal("Are you sure you want to update the item?",function(){
+                        $http({
+                            method: "PUT",
+                            url: "http://localhost:8077/api/BookChaptersAsync/" + $scope.selectedItem.id,
+                            data: $scope.selectedItem
+                        }).then(function(response){
+                            $scope.bookchapterError = "Data updated successfully";
+                        },function(error){
+                            $scope.bookchapterError = JSON.stringify(error);
+                        });
                     });
                 };
+
                 $scope.cancelEdit = function(){
                     $scope.isEditing = false;  
                     $scope.selectedItem = {};                      
-                }
+                };
+
+                $scope.showAddItem = function(){
+                    $scope.isAddition = true;
+                    $scope.newItem = {};                    
+                };
+
+                $scope.addItem = function(){
+                    $scope.showModal("Are you sure you want add the item?",function(){
+                        $http({
+                            method: "POST",
+                            url: "http://localhost:8077/api/BookChaptersAsync",
+                            data: $scope.newItem
+                        }).then(function(response){
+                            $scope.bookchapterError = "new item added"; //JSON.stringify(response.data); //JSON.stringify(response);
+                            $scope.isAddition = false;
+                            $scope.newItem = {};                        
+                            $scope.bookchapters.push(response.data); //item added at end
+                            //$scope.bookchapters.unshift(response.data); //item added at start
+                        }, function(error){
+                            $scope.bookchapterError = JSON.stringify(error);
+                        });
+
+                    });
+                };
+
+                $scope.cancelAdd = function(){
+                    $scope.isAddition= false;
+                    $scope.newItem = {};
+                };
+
+                $scope.deleteItem = function(item){
+                    var confirmed = window.confirm("Are you sure you want to delete this item ?");
+                    if(confirmed)
+                    {
+                        $http({
+                            method: "DELETE",
+                            url: "http://localhost:8077/api/BookChaptersAsync/" + item.id
+                        }).then(function(response){
+                            $scope.bookchapterError = "item deleted successfully";
+                            var index = $scope.findItemIndex(item);
+                            if(index != -1)
+                                $scope.bookchapters.splice(index,1);
+                        },function(error){
+                            $scope.bookchapterError = JSON.stringify(error);
+                        });     
+                    }                    
+                };
+
+                $scope.findItemIndex = function(findItem)
+                {
+                    var index = -1;
+                    index =  $scope.bookchapters.findIndex(function(item){
+                                return item.id == findItem.id;
+                            });
+                    return index;
+                };
             });
         </script>
     </body>
