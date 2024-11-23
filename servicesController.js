@@ -3,7 +3,7 @@ app.controller('servicesCtrl',function($scope, $sce, $location, $http, $timeout,
     //from webappWebAPI solution
     //alert('here');
     //service url - 'http://localhost:5271/WeatherForecast/GetTotalCount'
-    $http.get('http://localhost:5271/api/ServiceTest/GetTotalCount')
+    $http.get('http://localhost:8077/api/ServiceTest/GetTotalCount')
     .then(function(response){
         //alert(response);
         //alert(response.data);
@@ -26,7 +26,7 @@ app.controller('servicesCtrl',function($scope, $sce, $location, $http, $timeout,
         //alert('here');
         $http({
             method:"GET",
-            url:"http://localhost:5271/WeatherForecast/GetTotalCount"
+            url:"http://localhost:8077/WeatherForecast/GetTotalCount"
         }).then(function mySuccess(response){
             //alert('success' + response.data);
             $scope.serviceData = "Headers: " + JSON.stringify(response.headers) + 
@@ -42,7 +42,7 @@ app.controller('servicesCtrl',function($scope, $sce, $location, $http, $timeout,
     $scope.GetRecords = function(){
         $http({
             method: "GET",
-            url: "http://localhost:5271/api/ServiceTest/GetRecords"
+            url: "http://localhost:8077/api/ServiceTest/GetRecords"
         }).then(function mySuccess(response){
             jsonObject =JSON.parse(response.data);
             recordarr = jsonObject.records;
