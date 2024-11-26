@@ -10,14 +10,14 @@
     <div ng-app="" ng-init="myColor='lightblue';quantity=10;cost=15;firstName='John';lastName='Doe';person2={firstName:'John',lastName:'Miller'};
     points=[1,15,19,2,40]">
         <p>My first expression: {{ 5 + 5 }}</p>
-        <div style="background-color: {{myColor}};" ng-model="myColor">
+        <div ng-style="{'background-color': myColor}" ng-model="myColor">
             Div with background color lightblue<br/>
             Total in dollar: <span ng-bind="quantity * cost"></span>
             <br/>
             Full name is <span ng-bind="firstName + ' ' + lastName"></span>
         </div>
         <br/>
-        <input type="text" style="background-color: {{myColor}};" ng-model="myColor"/>
+        <input type="text" ng-style="{'background-color': myColor}" ng-model="myColor"/>
         <br/>
         <p>The name of person2 is <span ng-bind="person2.firstName + ' ' + person2.lastName"></span></p>
         <br/>
